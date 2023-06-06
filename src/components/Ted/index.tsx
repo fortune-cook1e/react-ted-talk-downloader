@@ -25,7 +25,9 @@ interface FormValues {
 const Ted = () => {
   const [videoData, setVideoData] = useState<TedVideoData>({
     id: '',
-    presenterName: '',
+    presenterDisplayName: '',
+    primaryImageSet: [],
+    playerData: '',
     recordedOn: '',
     slug: '',
     title: '',
