@@ -15,3 +15,8 @@ export interface TedTranslationData {
   type: 'paragraph';
   translation: string;
 }
+
+export interface PresetTedListRequest {
+  page?: number;
+  type?: string;
+}
