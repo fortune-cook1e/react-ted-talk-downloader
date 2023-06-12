@@ -9,7 +9,11 @@ request.interceptors.request.use(config => {
 });
 
 request.interceptors.response.use(response => {
-  return Promise.resolve(response.data);
+  const { code, data } = response.data;
+  if (code !== 0) {
+    return Promise.reject();
+  }
+  return Promise.resolve(data);
 });
 
 export default request;
