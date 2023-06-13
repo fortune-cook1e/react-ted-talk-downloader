@@ -1,23 +1,17 @@
 import { FC, useMemo } from 'react';
 
-import {
-  Page,
-  Text,
-  View,
-  Document,
-  StyleSheet,
-  Font,
-  PDFViewer,
-  Image,
-  Link,
-  PDFDownloadLink,
-} from '@react-pdf/renderer';
+import { Page, Text, View, Document, StyleSheet, Font, Image, Link } from '@react-pdf/renderer';
 import { LanguageCode, TedTalkData } from '@/types/ted';
 import { formatTranslations } from './utils';
 
 interface Props {
   data?: TedTalkData;
 }
+
+Font.register({
+  family: 'YaHei',
+  src: '//db.onlinewebfonts.com/t/e63653407669814f5b0eb9bbdc175f77.ttf',
+});
 
 Font.register({
   family: 'Oswald',
@@ -80,17 +74,31 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 16,
-    fontSize: 14,
+    fontSize: 16,
     textAlign: 'justify',
-    fontFamily: 'Times-Roman',
+    fontFamily: 'YaHei',
+    lineHeight: 2,
   },
+});
 
-  header: {
-    fontSize: 12,
-    marginBottom: 20,
-    textAlign: 'center',
-    color: 'grey',
-  },
+Font.registerHyphenationCallback((word: string) => {
+  // FixBug: 处理中文换行问题Bug
+  const reg = /[\u4e00-\u9fa5]/gm;
+
+  if (!word.match(reg)) {
+    return [word];
+  }
+
+  if (word.length === 1) {
+    return [word];
+  }
+
+  return Array.from(word)
+    .map(char => [char, ''])
+    .reduce((arr, current) => {
+      arr.push(...current);
+      return arr;
+    }, []);
 });
 
 const PreviewDocument: FC<Props> = ({ data }) => {
@@ -100,6 +108,7 @@ const PreviewDocument: FC<Props> = ({ data }) => {
       LanguageCode.Chinese,
     ]);
   }, [data]);
+
   return (
     <Document>
       <Page style={styles.body}>

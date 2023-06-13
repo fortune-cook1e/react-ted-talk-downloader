@@ -21,24 +21,11 @@ const TedPreview = forwardRef<TedPreviewRefHandler, Props>(
   ({ data, languages = [LanguageCode.English], translationMode = 'cross' }, ref) => {
     const [isOpen, { toggle, setTrue, setFalse }] = useBoolean(false);
 
-    const [instance, methods] = usePDF({
-      document: <PreviewDocument data={data} />,
-    });
-
     useImperativeHandle(ref, () => {
       return {
         open: () => setTrue(),
       };
     });
-
-    const onCancel = () => setFalse();
-
-    const transcript = useMemo(() => {
-      return formatTranslations(data?.translations, 'cross', [
-        LanguageCode.English,
-        LanguageCode.Chinese,
-      ]);
-    }, [data]);
 
     return (
       <Modal
@@ -52,15 +39,19 @@ const TedPreview = forwardRef<TedPreviewRefHandler, Props>(
           <Button key="cancel" onClick={setFalse}>
             取消
           </Button>,
-          <Button
+
+          <PDFDownloadLink
             key="download"
-            type="primary"
-            loading={instance.loading}
-            href={instance.url || ''}
-            download={`${data?.slug}.pdf`}
+            style={{ marginLeft: '8px' }}
+            document={<PreviewDocument data={data} />}
+            fileName={`${data?.slug}.pdf`}
           >
-            {instance.loading ? '下载中' : '下载'}
-          </Button>,
+            {({ loading }) => (
+              <Button loading={loading} type="primary">
+                {loading ? '下载中' : '下载'}
+              </Button>
+            )}
+          </PDFDownloadLink>,
         ]}
       >
         <PDFViewer style={{ height: '100%', width: '100%' }}>

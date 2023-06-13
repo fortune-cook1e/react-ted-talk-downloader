@@ -14,7 +14,7 @@ export enum LayoutType {
 
 const Preset: FC = () => {
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [layout, setLayout] = useState<LayoutType>(LayoutType.Card);
 

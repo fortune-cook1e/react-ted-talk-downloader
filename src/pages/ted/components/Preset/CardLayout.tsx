@@ -1,5 +1,5 @@
 import { TedTalkData } from '@/types/ted';
-import { Space, Row, Col, Pagination } from 'antd';
+import { Row, Col, Pagination } from 'antd';
 import { FC } from 'react';
 import TedCard from '@/components/TedCard';
 
@@ -26,6 +26,7 @@ const CardLayout: FC<Props> = ({ data = [], page, pageSize, total, onPageChange 
 
       <div className="flex justify-end">
         <Pagination
+          total={total}
           current={page}
           pageSize={pageSize}
           onChange={(_page, _pageSize) => {
