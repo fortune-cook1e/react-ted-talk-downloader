@@ -37,10 +37,24 @@ export interface TedTalkData {
   supportLangs: LanguageItem[];
 }
 
+export enum TedSortEnum {
+  Newsest = 'newsest',
+  Popular = 'popular',
+}
+
 export interface PresetTedListRequest {
   page?: number;
   page_size?: number;
   type?: string;
+}
+
+export interface TedCrawlerRequest {
+  page?: number;
+  language?: LanguageCode;
+  sort?: TedSortEnum;
+  topics?: string;
+  keyword?: string;
+  transcript_langs?: LanguageCode[];
 }
 
 export interface PresetTedListResponse {

@@ -3,26 +3,27 @@ import type { TabsProps } from 'antd';
 import { Tabs } from 'antd';
 
 import Preset from './components/Preset';
+import Crawler from './components/Crawler';
 
 export enum Type {
   Preset = 'preset',
-  Search = 'search',
+  Crawler = 'crawler',
 }
 
 const Ted: FC = () => {
-  const [type, setType] = useState<Type>(Type.Preset);
+  const [type, setType] = useState<Type>(Type.Crawler);
 
   const items: TabsProps['items'] = useMemo(() => {
     return [
       {
         key: Type.Preset,
         children: <Preset />,
-        label: '预设模块',
+        label: 'Preset',
       },
       {
-        label: '单篇搜索',
-        key: Type.Search,
-        children: 'gaga',
+        label: 'Crawler',
+        key: Type.Crawler,
+        children: <Crawler />,
       },
     ];
   }, []);

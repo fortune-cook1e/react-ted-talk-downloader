@@ -6,6 +6,7 @@ import { useRequest } from 'ahooks';
 import { getPresetTedList } from '@/apis/ted';
 import { TedTalkData } from '@/types/ted';
 import CardLayout from './CardLayout';
+import EmptyWrapper from '@/components/EmptyWrapper';
 
 export enum LayoutType {
   Table = 'table',
@@ -46,41 +47,46 @@ const Preset: FC = () => {
   ];
 
   return (
-    <>
-      {layout === LayoutType.Table ? (
-        <Table<TedTalkData>
-          columns={columns}
-          rowKey="id"
-          loading={loading}
-          dataSource={data?.list}
-          pagination={{
-            total,
-            pageSize,
-            current: page,
-            showQuickJumper: true,
-            onChange(_page, _pageSize) {
-              if (page !== _page || pageSize !== _pageSize) {
-                setPage(_page);
-                setPageSize(_pageSize);
-              }
-            },
-          }}
-        ></Table>
-      ) : (
-        <Spin spinning={loading}>
-          <CardLayout
-            data={data?.list}
-            total={total}
-            page={page}
-            pageSize={pageSize}
-            onPageChange={(page, pageSize) => {
-              setPage(page);
-              setPageSize(pageSize);
-            }}
-          />
-        </Spin>
-      )}
-    </>
+    <EmptyWrapper isEmpty={!!data?.list}>
+      <div>
+        <div className="flex flex-row-reverse"></div>
+        <div>
+          {layout === LayoutType.Table ? (
+            <Table<TedTalkData>
+              columns={columns}
+              rowKey="id"
+              loading={loading}
+              dataSource={data?.list}
+              pagination={{
+                total,
+                pageSize,
+                current: page,
+                showQuickJumper: true,
+                onChange(_page, _pageSize) {
+                  if (page !== _page || pageSize !== _pageSize) {
+                    setPage(_page);
+                    setPageSize(_pageSize);
+                  }
+                },
+              }}
+            ></Table>
+          ) : (
+            <Spin spinning={loading}>
+              <CardLayout
+                data={data?.list}
+                total={total}
+                page={page}
+                pageSize={pageSize}
+                onPageChange={(page, pageSize) => {
+                  setPage(page);
+                  setPageSize(pageSize);
+                }}
+              />
+            </Spin>
+          )}
+        </div>
+      </div>
+    </EmptyWrapper>
   );
 };
 

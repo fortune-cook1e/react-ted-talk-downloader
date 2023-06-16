@@ -1,14 +1,5 @@
-import { PresetTedListRequest, PresetTedListResponse } from '@/types/ted';
+import { PresetTedListRequest, PresetTedListResponse, TedCrawlerRequest } from '@/types/ted';
 import request from '@/utils/request';
-
-// export const getTedHtml = (url: string): Promise<string> =>
-//   reqRequest({
-//     url: '/app/ted',
-//     method: 'post',
-//     data: {
-//       url,
-//     },
-//   });
 
 export const getPresetTedList = (params: PresetTedListRequest): Promise<PresetTedListResponse> =>
   request({
@@ -17,11 +8,10 @@ export const getPresetTedList = (params: PresetTedListRequest): Promise<PresetTe
     params,
   });
 
-export const getSearchTedResult = (keyword: string): Promise<any> =>
+// 搜索ted talk数据
+export const getCrawlerTedList = (data?: TedCrawlerRequest): Promise<PresetTedListResponse> =>
   request({
-    url: '/ted/search',
-    method: 'get',
-    params: {
-      keyword,
-    },
+    url: '/ted/crawler',
+    method: 'post',
+    data,
   });
