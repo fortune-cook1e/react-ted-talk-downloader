@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Table } from 'antd';
+import { Spin, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 import { useRequest } from 'ahooks';
@@ -67,16 +67,18 @@ const Preset: FC = () => {
           }}
         ></Table>
       ) : (
-        <CardLayout
-          data={data?.list}
-          total={total}
-          page={page}
-          pageSize={pageSize}
-          onPageChange={(page, pageSize) => {
-            setPage(page);
-            setPageSize(pageSize);
-          }}
-        />
+        <Spin spinning={loading}>
+          <CardLayout
+            data={data?.list}
+            total={total}
+            page={page}
+            pageSize={pageSize}
+            onPageChange={(page, pageSize) => {
+              setPage(page);
+              setPageSize(pageSize);
+            }}
+          />
+        </Spin>
       )}
     </>
   );

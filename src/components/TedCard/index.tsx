@@ -1,9 +1,10 @@
 import { LanguageCode, TedTalkData } from '@/types/ted';
 import { CSSProperties, FC, useMemo, useRef } from 'react';
-import { Card } from 'antd';
 import { ExpandOutlined, DownloadOutlined } from '@ant-design/icons';
 import TedPreview, { TedPreviewRefHandler } from '../TedPreview';
-import { Space } from 'antd';
+import { Space, Tag, Tooltip, Card } from 'antd';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import PreviewDocument from '../TedPreview/PreviewDocument';
 
 const { Meta } = Card;
 
@@ -22,35 +23,33 @@ const TedCard: FC<Props> = ({ data }) => {
 
   const actions = [
     <ExpandOutlined key="preview" onClick={preview} />,
-    <DownloadOutlined key="download" />,
+
+    <PDFDownloadLink
+      key="download"
+      style={{ marginLeft: '8px' }}
+      document={<PreviewDocument data={data} />}
+      fileName={`${data?.slug}.pdf`}
+    >
+      <DownloadOutlined key="download" />
+    </PDFDownloadLink>,
   ];
 
-  const dualLanguage = useMemo(() => {
-    let languages = [LanguageCode.Chinese, LanguageCode.English];
-    data.translations.forEach(item => {
-      if (item.languageCode === LanguageCode.English) {
-        languages = languages.filter(l => l === LanguageCode.English);
-      }
-      if (item.languageCode === LanguageCode.Chinese) {
-        languages = languages.filter(l => l === LanguageCode.Chinese);
-      }
-    });
-    return languages.length === 0;
-  }, [data]);
+  const supportLangs = data.supportLangs.map(l => l.endonym).join(',');
+  const transcriptLangs = [data.language.endonym]
+    .concat(...data.translations.map(t => t.language.endonym))
+    .join(',');
+
+  const hasCn = data.translations.some(t => t.language.code === LanguageCode.Chinese);
+
+  // 中英文字幕对的上
+  // Tip: 因为存在中英文翻译对不上的情况 所以通过判断transcript长度
+  const cn2EnglishCorrect =
+    hasCn &&
+    data.transcript.length ===
+      data.translations.find(i => i.language.code === LanguageCode.Chinese)?.transcript.length;
 
   return (
     <>
-      {/* <Card
-        hoverable
-        cover={<img src={thumb} alt={title} />}
-        actions={[<ExpandOutlined key="preview" onClick={preview} />]}
-      >
-        <Meta
-          title={title}
-          description={<span className="line-clamp-2">{description}</span>}
-        ></Meta>
-      </Card> */}
-
       <div className="w-full rounded-md cursor-pointer border-[1px] border-slate-200 transition-all hover:shadow-lg divide-y divide-slate-200">
         <div className="mt-[-1px]">
           <img src={thumb} alt={title} className="block rounded-t-md" />
@@ -61,14 +60,22 @@ const TedCard: FC<Props> = ({ data }) => {
           </div>
           <p className="font-bold text-base mb-1 line-clamp-3">
             <span className="mr-2">{title}</span>
-            {dualLanguage && (
-              <span className="inline-block w-6 h-6 text-center bg-cyan-200 rounded-full">D</span>
-            )}
           </p>
-          <p className="text-slate-500">
+          <div className="text-slate-500 mb-1">
             <span className="font-bold">Posted </span>
             <span>{recordedOn}</span>
-          </p>
+          </div>
+
+          <div className="flex items-center">
+            <Tooltip title={supportLangs}>
+              <Tag color="magenta">Support</Tag>
+            </Tooltip>
+            <Tooltip title={transcriptLangs}>
+              <Tag color="orange">Transcript</Tag>
+            </Tooltip>
+            {hasCn && <Tag color="green">Cn</Tag>}
+            {cn2EnglishCorrect && <Tag color="blue">Cn2English</Tag>}
+          </div>
         </div>
 
         <div className="flex items-center">

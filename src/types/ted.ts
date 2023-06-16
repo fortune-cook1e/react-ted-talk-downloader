@@ -12,11 +12,10 @@ export enum LanguageCode {
   Chinese = 'zh-cn',
 }
 
-export interface TranslationItem {
+export interface LanguageItem {
   endonym: string;
-  englishName: string;
-  languageCode: LanguageCode;
-  cues: string[];
+  name: string;
+  code: LanguageCode;
 }
 
 export interface TedTalkData {
@@ -28,11 +27,14 @@ export interface TedTalkData {
   thumb: string;
   canonical: string;
   recordedOn: string;
-  translations: TranslationItem[];
+  translations: Pick<TedTalkData, 'title' | 'name' | 'speaker' | 'transcript' | 'language'>[];
+  transcript: string[];
+  language: LanguageItem;
   description: string;
   duration: number;
   resources: any;
   type: TedTalkEnum;
+  supportLangs: LanguageItem[];
 }
 
 export interface PresetTedListRequest {
