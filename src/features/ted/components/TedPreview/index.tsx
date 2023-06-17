@@ -2,7 +2,6 @@ import { LanguageCode, TedTalkData } from '@/types/ted';
 import { forwardRef, useImperativeHandle, useMemo } from 'react';
 import { Button, Modal } from 'antd';
 import { useBoolean } from 'ahooks';
-import { formatTranslations } from './utils';
 import PreviewDocument from './PreviewDocument';
 
 import { PDFViewer, PDFDownloadLink, usePDF } from '@react-pdf/renderer';
