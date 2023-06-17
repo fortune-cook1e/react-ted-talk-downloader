@@ -1,4 +1,4 @@
-import { TedPreviewRefHandler } from '@/components/TedPreview';
+import { TedPreviewRefHandler } from '@/features/ted/components/TedPreview';
 import { TedTalkData } from '@/types/ted';
 import { useRef, useState } from 'react';
 

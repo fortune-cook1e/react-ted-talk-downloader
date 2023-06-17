@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 
@@ -11,18 +11,11 @@ const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
     token: { colorBgContainer },
   } = theme.useToken();
 
+  const [collapsed, setCollapsed] = useState(true);
+
   return (
     <Layout className="min-h-screen">
-      <Sider
-        breakpoint="lg"
-        collapsedWidth="0"
-        onBreakpoint={broken => {
-          console.log(broken);
-        }}
-        onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
-        }}
-      >
+      <Sider collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}>
         <div className="demo-logo-vertical" />
         <Menu
           theme="dark"

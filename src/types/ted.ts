@@ -18,6 +18,11 @@ export interface LanguageItem {
   code: LanguageCode;
 }
 
+export type TedTalkTranslationItem = Pick<
+  TedTalkData,
+  'title' | 'name' | 'speaker' | 'transcript' | 'language'
+>;
+
 export interface TedTalkData {
   id: string;
   title: string;
@@ -27,7 +32,7 @@ export interface TedTalkData {
   thumb: string;
   canonical: string;
   recordedOn: string;
-  translations: Pick<TedTalkData, 'title' | 'name' | 'speaker' | 'transcript' | 'language'>[];
+  translations: TedTalkTranslationItem[];
   transcript: string[];
   language: LanguageItem;
   description: string;

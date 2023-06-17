@@ -1,4 +1,4 @@
-import { Form, Select, Input, Button } from 'antd';
+import { Form, Select, Input, Button, Space } from 'antd';
 import { CSSProperties, FC } from 'react';
 import {
   LANGUAGE_OPTIONS,
@@ -9,6 +9,8 @@ import {
 import { LanguageCode, TedCrawlerRequest } from '@/types/ted';
 
 interface CrawlerFormProps {
+  loading: boolean;
+  onCancel: () => void;
   onSearch: (values: Omit<TedCrawlerRequest, 'page'>) => void;
 }
 
@@ -18,7 +20,7 @@ const formItemStyles: CSSProperties = {
 
 const { Item } = Form;
 
-const CrawlerForm: FC<CrawlerFormProps> = ({ onSearch }) => {
+const CrawlerForm: FC<CrawlerFormProps> = ({ onSearch, loading, onCancel }) => {
   const [form] = Form.useForm<Omit<TedCrawlerRequest, 'page'>>();
 
   const handleSearch = () => {
@@ -73,9 +75,14 @@ const CrawlerForm: FC<CrawlerFormProps> = ({ onSearch }) => {
       </Item>
 
       <Item>
-        <Button type="primary" onClick={handleSearch}>
-          Search
-        </Button>
+        <Space>
+          <Button type="primary" loading={loading} onClick={handleSearch}>
+            Search
+          </Button>
+          <Button type="default" onClick={onCancel}>
+            Cancel
+          </Button>
+        </Space>
       </Item>
     </Form>
   );

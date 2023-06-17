@@ -2,7 +2,7 @@ import { FC, useMemo } from 'react';
 
 import { Page, Text, View, Document, StyleSheet, Font, Image, Link } from '@react-pdf/renderer';
 import { LanguageCode, TedTalkData } from '@/types/ted';
-import { formatTranslations, getDetailByLanguage } from './utils';
+import { useTed } from '../../hooks/useTed';
 
 interface Props {
   data?: TedTalkData;
@@ -22,31 +22,6 @@ Font.register({
   family: 'Times bold',
   src: 'https://fonts.cdnfonts.com/s/18465/TTimesb.woff',
 });
-
-// Font.register({
-//   family: 'Oswald',
-//   src: 'https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf',
-// });
-
-// Font.register({
-//   family: 'Open Sans',
-//   src: `https://fonts.gstatic.com/s/opensans/v17/mem8YaGs126MiZpBA-UFVZ0e.ttf`,
-// });
-
-// Font.register({
-//   family: 'Lato',
-//   src: `https://fonts.gstatic.com/s/lato/v16/S6uyw4BMUTPHjx4wWw.ttf`,
-// });
-
-// Font.register({
-//   family: 'Lato Italic',
-//   src: `https://fonts.gstatic.com/s/lato/v16/S6u8w4BMUTPHjxsAXC-v.ttf`,
-// });
-
-// Font.register({
-//   family: 'Lato Bold',
-//   src: `https://fonts.gstatic.com/s/lato/v16/S6u9w4BMUTPHh6UVSwiPHA.ttf`,
-// });
 
 const styles = StyleSheet.create({
   page: {
@@ -94,6 +69,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
   },
+  subtitle: {
+    fontSize: 20,
+    fontFamily: 'Yahei',
+    padding: '0 10',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
   transcript: {
     padding: '0 10 10 10',
   },
@@ -131,11 +113,14 @@ Font.registerHyphenationCallback((word: string) => {
 });
 
 const PreviewDocument: FC<Props> = ({ data }) => {
+  const { formatTranscripts, getDetailByLanguage } = useTed({ data });
+
   const transcript = useMemo(() => {
-    return formatTranslations(data, 'cross', [LanguageCode.English, LanguageCode.Chinese]);
+    return formatTranscripts(data, 'cross', [LanguageCode.English, LanguageCode.Chinese]);
   }, [data]);
 
   const cnDetail = getDetailByLanguage(data, LanguageCode.Chinese);
+  const enDetail = getDetailByLanguage(data, LanguageCode.English);
 
   return (
     <Document>
@@ -158,14 +143,14 @@ const PreviewDocument: FC<Props> = ({ data }) => {
                 <Text>{cnDetail?.title}</Text>
               </View>
             )}
-            <View style={styles.title}>
-              <Text>{data?.title}</Text>
+            <View style={styles.subtitle}>
+              <Text>{enDetail?.title}</Text>
             </View>
 
             <View style={styles.transcript}>
-              {transcript.map(t => {
+              {transcript.map((t, index) => {
                 return (
-                  <Text style={styles.text} key={t}>
+                  <Text style={styles.text} key={index}>
                     {t}
                   </Text>
                 );
@@ -176,26 +161,6 @@ const PreviewDocument: FC<Props> = ({ data }) => {
           <View style={styles.summary}></View>
         </View>
       </Page>
-      {/* <Page style={styles.body}>
-        <View style={styles.transcript}>
-          <Link style={styles.title} src={data?.canonical || ''}>
-            {data?.title}
-          </Link>
-          <Text style={styles.author}>Author: {data?.speaker}</Text>
-
-          <Image src={data?.thumb}></Image>
-
-          {transcript.map(t => {
-            return (
-              <Text style={styles.text} key={t}>
-                {t}
-              </Text>
-            );
-          })}
-        </View>
-
-        <View style={styles.summary}>Summary</View>
-      </Page> */}
     </Document>
   );
 };

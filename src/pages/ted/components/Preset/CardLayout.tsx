@@ -1,7 +1,7 @@
 import { TedTalkData } from '@/types/ted';
 import { Row, Col, Pagination } from 'antd';
 import { FC } from 'react';
-import TedCard from '@/components/TedCard';
+import TedCard from '@/features/ted/components/TedCard';
 
 export interface Props {
   data?: TedTalkData[];
@@ -40,7 +40,7 @@ const CardLayout: FC<Props> = ({
             pageSize={pageSize}
             onChange={(_page, _pageSize) => {
               if (_page !== page || _pageSize !== pageSize) {
-                onPageChange(_page, _pageSize);
+                onPageChange?.(_page, _pageSize);
               }
             }}
           />

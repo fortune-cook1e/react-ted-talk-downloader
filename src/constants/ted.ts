@@ -1,5 +1,4 @@
 import { LanguageCode } from '@/types/ted';
-import toLower from 'lodash/toLower';
 
 export const TOPICS = ['Technology', 'Entertainment', 'Business', 'Science'];
 

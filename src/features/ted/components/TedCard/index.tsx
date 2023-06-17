@@ -5,6 +5,7 @@ import TedPreview, { TedPreviewRefHandler } from '../TedPreview';
 import { Space, Tag, Tooltip, Card } from 'antd';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import PreviewDocument from '../TedPreview/PreviewDocument';
+import { useTed } from '../../hooks/useTed';
 
 const { Meta } = Card;
 
@@ -17,12 +18,18 @@ const TedCard: FC<Props> = ({ data }) => {
   const { thumb, description, title, speaker, recordedOn } = data;
   const previewRef = useRef<TedPreviewRefHandler>(null);
 
+  const { getTranscriptByLang, hasLanguage } = useTed({ data });
+
   const preview = () => {
     previewRef.current?.open();
   };
 
   const actions = [
-    <ExpandOutlined key="preview" onClick={preview} />,
+    <ExpandOutlined
+      key="preview"
+      onClick={preview}
+      className="cursor-pointer hover:text-sky-400"
+    />,
 
     <PDFDownloadLink
       key="download"
@@ -30,7 +37,7 @@ const TedCard: FC<Props> = ({ data }) => {
       document={<PreviewDocument data={data} />}
       fileName={`${data?.slug}.pdf`}
     >
-      <DownloadOutlined key="download" />
+      <DownloadOutlined key="download" className="cursor-pointer hover:text-sky-400" />
     </PDFDownloadLink>,
   ];
 
@@ -38,15 +45,13 @@ const TedCard: FC<Props> = ({ data }) => {
   const transcriptLangs = [data.language.endonym]
     .concat(...data.translations.map(t => t.language.endonym))
     .join(',');
-
-  const hasCn = data.translations.some(t => t.language.code === LanguageCode.Chinese);
+  const hasCn = hasLanguage(LanguageCode.Chinese);
 
   // 中英文字幕对的上
   // Tip: 因为存在中英文翻译对不上的情况 所以通过判断transcript长度
-  const cn2EnglishCorrect =
-    hasCn &&
-    data.transcript.length ===
-      data.translations.find(i => i.language.code === LanguageCode.Chinese)?.transcript.length;
+  const cn2EnCorrect =
+    getTranscriptByLang(LanguageCode.Chinese).length ===
+    getTranscriptByLang(LanguageCode.English).length;
 
   return (
     <>
@@ -74,7 +79,7 @@ const TedCard: FC<Props> = ({ data }) => {
               <Tag color="orange">Transcript</Tag>
             </Tooltip>
             {hasCn && <Tag color="green">Cn</Tag>}
-            {cn2EnglishCorrect && <Tag color="blue">Cn2English</Tag>}
+            {cn2EnCorrect && <Tag color="blue">Cn2English</Tag>}
           </div>
         </div>
 
