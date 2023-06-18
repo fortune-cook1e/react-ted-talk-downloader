@@ -5,8 +5,8 @@ import type { ColumnsType } from 'antd/es/table';
 import { useRequest } from 'ahooks';
 import { getPresetTedList } from '@/apis/ted';
 import { TedTalkData } from '@/types/ted';
-import CardLayout from './CardLayout';
 import EmptyWrapper from '@/components/EmptyWrapper';
+import TedCardLayout from '@/features/ted/components/TedCardLayout';
 
 export enum LayoutType {
   Table = 'table',
@@ -47,7 +47,7 @@ const Preset: FC = () => {
   ];
 
   return (
-    <EmptyWrapper isEmpty={!!data?.list}>
+    <EmptyWrapper loading={loading} isEmpty={data?.list.length === 0}>
       <div>
         <div className="flex flex-row-reverse"></div>
         <div>
@@ -72,7 +72,7 @@ const Preset: FC = () => {
             ></Table>
           ) : (
             <Spin spinning={loading}>
-              <CardLayout
+              <TedCardLayout
                 data={data?.list}
                 total={total}
                 page={page}

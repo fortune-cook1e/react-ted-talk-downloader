@@ -34,7 +34,7 @@ const Ted: FC = () => {
 
   return (
     <main>
-      <Tabs activeKey={type} items={items} onChange={onTabChange} destroyInactiveTabPane></Tabs>
+      <Tabs activeKey={type} items={items} onChange={onTabChange}></Tabs>
     </main>
   );
 };

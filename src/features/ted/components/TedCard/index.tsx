@@ -52,14 +52,15 @@ const TedCard: FC<Props> = ({ data }) => {
       className="cursor-pointer hover:text-sky-400"
     />,
 
-    <PDFDownloadLink
-      key="download"
-      style={{ marginLeft: '8px' }}
-      document={<PreviewDocument data={data} />}
-      fileName={`${data?.slug}.pdf`}
-    >
-      <DownloadOutlined key="download" className="cursor-pointer hover:text-sky-400" />
-    </PDFDownloadLink>,
+    // FixMe: 这里会导致渲染十分卡顿
+    // <PDFDownloadLink
+    //   key="download"
+    //   style={{ marginLeft: '8px' }}
+    //   document={<PreviewDocument data={data} />}
+    //   fileName={`${data?.slug}.pdf`}
+    // >
+    //   <DownloadOutlined key="download" className="cursor-pointer hover:text-sky-400" />
+    // </PDFDownloadLink>,
   ];
 
   const supportLangs = data.supportLangs.map(l => l.endonym).join(',');

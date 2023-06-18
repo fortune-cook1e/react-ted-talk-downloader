@@ -7,15 +7,19 @@ import 'dayjs/locale/zh-cn';
 import zhCN from 'antd/locale/zh_CN';
 dayjs.locale('zh-cn');
 
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, App as AntdApp } from 'antd';
 import AppLayout from '@/layout';
+import { GlobalMessage } from '@/components/GlobalMessage';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <AppLayout>
       <ConfigProvider locale={zhCN}>
         <StyleProvider hashPriority="high">
-          <Component {...pageProps} />
+          <AntdApp>
+            <Component {...pageProps} />
+            <GlobalMessage />
+          </AntdApp>
         </StyleProvider>
       </ConfigProvider>
     </AppLayout>
