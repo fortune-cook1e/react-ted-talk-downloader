@@ -33,6 +33,7 @@ const CrawlerForm: FC<CrawlerFormProps> = ({ onSearch, loading, onCancel }) => {
       form={form}
       initialValues={{
         transcript_langs: [LanguageCode.Chinese, LanguageCode.English],
+        language: LanguageCode.Chinese,
       }}
     >
       <Item name="topics">

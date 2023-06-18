@@ -1,13 +1,14 @@
 import { LanguageCode, TedTalkData } from '@/types/ted';
 import { CSSProperties, FC, useMemo, useRef } from 'react';
-import { ExpandOutlined, DownloadOutlined } from '@ant-design/icons';
+import { ExpandOutlined, DownloadOutlined, MenuOutlined } from '@ant-design/icons';
 import TedPreview, { TedPreviewRefHandler } from '../TedPreview';
-import { Space, Tag, Tooltip, Card } from 'antd';
+import { Tag, Tooltip, Dropdown, message } from 'antd';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import PreviewDocument from '../TedPreview/PreviewDocument';
 import { useTed } from '../../hooks/useTed';
-
-const { Meta } = Card;
+import type { MenuProps } from 'antd';
+import { saveAsPreset, deleteTed } from '@/apis/ted';
+import { useRequest } from 'ahooks';
 
 export interface Props {
   data: TedTalkData;
@@ -23,6 +24,26 @@ const TedCard: FC<Props> = ({ data }) => {
   const preview = () => {
     previewRef.current?.open();
   };
+
+  const { run: saveAsPresetRunner } = useRequest(() => saveAsPreset(data), {
+    manual: true,
+    onSuccess() {
+      message.success('保存成功');
+    },
+  });
+
+  const items: MenuProps['items'] = [
+    {
+      label: 'Delete',
+      key: 'delete',
+      onClick() {},
+    },
+    {
+      label: 'Save as preset',
+      key: 'save',
+      onClick: saveAsPresetRunner,
+    },
+  ];
 
   const actions = [
     <ExpandOutlined
@@ -56,7 +77,10 @@ const TedCard: FC<Props> = ({ data }) => {
   return (
     <>
       <div className="w-full rounded-md cursor-pointer border-[1px] border-slate-200 transition-all hover:shadow-lg divide-y divide-slate-200">
-        <div className="mt-[-1px]">
+        <div className="mt-[-1px] relative">
+          <Dropdown className="absolute top-4 right-4" menu={{ items }}>
+            <MenuOutlined className="text-sky-500 text-lg" />
+          </Dropdown>
           <img src={thumb} alt={title} className="block rounded-t-md" />
         </div>
         <div className="p-2  border-gray-200">

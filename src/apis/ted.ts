@@ -1,4 +1,9 @@
-import { PresetTedListRequest, PresetTedListResponse, TedCrawlerRequest } from '@/types/ted';
+import {
+  PresetTedListRequest,
+  PresetTedListResponse,
+  TedCrawlerRequest,
+  TedTalkData,
+} from '@/types/ted';
 import request from '@/utils/request';
 
 export const getPresetTedList = (params: PresetTedListRequest): Promise<PresetTedListResponse> =>
@@ -14,4 +19,20 @@ export const getCrawlerTedList = (data?: TedCrawlerRequest): Promise<PresetTedLi
     url: '/ted/crawler',
     method: 'post',
     data,
+  });
+
+export const saveAsPreset = (data: TedTalkData) =>
+  request({
+    url: '/ted/create',
+    method: 'post',
+    data,
+  });
+
+export const deleteTed = (id: string) =>
+  request({
+    url: '/ted/delete',
+    method: 'delete',
+    data: {
+      id,
+    },
   });
